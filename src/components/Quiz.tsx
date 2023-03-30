@@ -2,6 +2,7 @@ import { useState, useEffect } from "react";
 import Button from "./CustomButtonComponent";
 import { FaWindowClose } from "react-icons/fa";
 import './Quiz.css'
+import { useNavigate } from "react-router-dom";
 
 export enum Difficulty {
     EASY = "easy",
@@ -17,7 +18,6 @@ type Props = {
     question: string,
     type: string,
 };
-
 
 export const Quiz = () => {
 
@@ -42,11 +42,15 @@ export const Quiz = () => {
         fetchData()
             // make sure to catch any error
             .catch(console.error);
-
-        console.log('This is the data: ', data);
         // cancel any future `setData`
         return () => setIsSubscribed(prev => !prev);
     }, [])
+
+    let navigate = useNavigate();
+
+    const routeChange = (id: number) => {
+        navigate(`/quiz/${id}`, { state: { id: id } });
+    }
 
     const removeElement = (index: number) => {
         const newData = data?.filter((_, i) => i !== index);
@@ -55,19 +59,18 @@ export const Quiz = () => {
     }
 
     return <div className="App">
-        {data?.map((answer, index) => (
+        {data?.map(({ category, difficulty }, index) => (
             <div className="question-container">
                 <div className="question">
-                    <div>Category: {answer.category}</div>
-                    <div>Difficulty: {answer.difficulty}</div>
+                    <div>Category: {category}</div>
+                    <div>Difficulty: {difficulty}</div>
                     <div className="delete-element" onClick={() => removeElement(index)}>
                         <FaWindowClose />
                     </div>
                     <Button
                         color="#f5bc42"
                         height="30px"
-                        onClick={() => { console.log('Clicked') }}
-                        radius="1rem"
+                        onClick={() => routeChange(index)}
                         width="200px"
                         cursor="pointer"
                     > Choose </Button>

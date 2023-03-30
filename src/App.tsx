@@ -1,13 +1,19 @@
+import { Route, Routes } from 'react-router-dom';
 import './App.css';
-import { Quiz } from './components/Quiz';
+import { Home } from './pages/Home';
+import { QuizInfo } from './pages/QuizInfo';
+import { ExperimentProvider } from './components/ExperimentContext'
 
 function App() {
   return (
-    <div className="App">
-      <header className="App-header">
-        <Quiz />
-      </header>
-    </div>
+    <>
+      <ExperimentProvider>
+        <Routes>
+          <Route path="/" element={<Home />} />
+          <Route path="/quiz/:id" element={<QuizInfo />} />
+        </Routes>
+      </ExperimentProvider>
+    </>
   );
 }
 
